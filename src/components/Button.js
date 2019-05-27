@@ -1,21 +1,38 @@
 import React, { Component } from 'react';
 import LanguageContext from 'contexts/LanguageContext';
+import ColorContext from 'contexts/ColorContext';
 
 class Button extends Component {
-  static contextType = LanguageContext;
-  // ^ How we hook up a Context object to a class component
-  // `static` adds a property to the class itself, does the same thing as `Button.contextType`
+  renderSubmit = (language) => {
+    return language === 'english' ? 'Submit' : 'Voorleggen'
+  };
+
+  renderButton = (color) => {
+    return (
+      <button className={`ui button ${color}`}>
+        {/* ^ ES6 Syntax for Template Literals */}
+        <LanguageContext.Consumer>
+          {(value) => this.renderSubmit(value)}
+        </LanguageContext.Consumer>
+      </button>
+    );
+  };
 
   render() {
-    console.log('this.context :', this.context);
-    const text = this.context.language === 'english' ? 'Submit' : 'Voorleggen';
-    // ^ Ternary Expression
     return (
-      <button className="ui button primary">
-        {text}
-      </button>
+      <ColorContext.Consumer>
+        {(value) => this.renderButton(value)}
+      </ColorContext.Consumer>
     );
   };
 };
 
 export default Button;
+
+// Notes:
+
+// Context Consumer component gets only one child, and it is always going to be a function (in essence, we are providing a function as a child to a React component)
+// ^ Child function will get automatically called by the Consumer, and it will get called with whatever is the current `value` (specific to Context Consumer, you cannot use any other argument) of the Context object
+
+// Why use Context Consumer instead of `contextType` like we have in <Field />?
+// You should use Context Consumer anytime you need to get information out of MULTIPLE DIFFERENT CONTEXT OBJECTS inside of a single component, `contextType` should be used only when you want to access only a SINGLE CONTEXT OBJECT inside of a single component
