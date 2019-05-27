@@ -8,7 +8,7 @@ class Field extends Component {
 
   render() {
     console.log('this.context :', this.context);
-    const text = this.context === 'english' ? 'Name' : 'Naam';
+    const text = this.context.language === 'english' ? 'Name' : 'Naam';
     // ^ Ternary Expression
     return (
       <div className="ui field">
